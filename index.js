@@ -46,7 +46,7 @@ app.use("/api/products", require("./routes/products"));
 //       const folderName = path.basename(rootPath);
 //       const categoryName = folderName.replace(/_/g, ' '); // Replace underscores with spaces
 //       const productName = fileName.replace(/_/g, ' '); // Replace underscores with spaces
-//       const imageUrl = `http://localhost:5000/api/products/assets/${folderName}/${file}`
+//       const imageUrl = `https://shopperstop-server.onrender.com/api/products/assets/${folderName}/${file}`
 //       const product = new Product({
 //         name: productName,
 //         category: categoryName,
