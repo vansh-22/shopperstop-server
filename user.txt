@@ -1,3 +1,0 @@
-workvanshchopra
-1B1Z3kjcN2tVry2J
-mongodb+srv://workvanshchopra:1B1Z3kjcN2tVry2J@user.2tymb3f.mongodb.net/?retryWrites=true&w=majority&appName=User
