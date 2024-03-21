@@ -5,7 +5,7 @@ const path = require("path");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 
-// Get the products - localhost:5000/api/products/getproducts
+// ROUTE 1 : Get the products - localhost:5000/api/products/getproducts
 router.get("/getproducts", async (req, res) => {
   try {
     const products = await Product.find();
@@ -16,7 +16,7 @@ router.get("/getproducts", async (req, res) => {
   }
 });
 
-// Get a product using its id - localhost:5000/api/products/get-a-product
+// ROUTE 2 : Get a product using its id - localhost:5000/api/products/get-a-product
 router.get("/get-a-product", async (req, res) => {
   const { productId } = req.query;
 
@@ -34,7 +34,7 @@ router.get("/get-a-product", async (req, res) => {
   }
 });
 
-// Retrieve the cart - localhost:5000/api/products/cart
+// ROUTE 3 : Retrieve the cart - localhost:5000/api/products/cart
 router.get("/cart", async (req, res) => {
   const {userId}= req.query;
   
@@ -51,13 +51,13 @@ router.get("/cart", async (req, res) => {
   }
 });
 
-// Add Product to Cart - localhost:5000/api/products/add-to-cart
+// ROUTE 4 : Add Product to Cart - localhost:5000/api/products/add-to-cart
 router.post("/add-to-cart", async (req, res) => {
   const { userId, productId, quantity } = req.body;
 
-  console.log(typeof userId);
-  console.log(typeof productId);
-  console.log(typeof quantity);
+  // console.log(typeof userId);
+  // console.log(typeof productId);
+  // console.log(typeof quantity);
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -91,7 +91,7 @@ router.post("/add-to-cart", async (req, res) => {
   }
 });
 
-// Delete the cart - localhost:5000/api/products/delete-cart
+// ROUTE 5 : Delete the cart - localhost:5000/api/products/delete-cart
 router.delete("/delete-cart", async (req, res) => {
   const { userId } = req.body;
   console.log(userId);
@@ -114,7 +114,7 @@ router.delete("/delete-cart", async (req, res) => {
   }
 });
 
-// Route to increment the quantity - localhost:5000/api/products/increment-quantity
+// ROUTE 6 : Increment the quantity - localhost:5000/api/products/increment-quantity
 router.post("/increment-quantity", async (req, res) => {
   const { userId, productId } = req.body;
 
@@ -141,7 +141,7 @@ router.post("/increment-quantity", async (req, res) => {
   }
 });
 
-// Route to decrement the quantity - localhost:5000/api/products/decrement-quantity
+// ROUTE 7 : Decrement the quantity - localhost:5000/api/products/decrement-quantity
 router.post("/decrement-quantity", async (req, res) => {
   const { userId, productId } = req.body;
 

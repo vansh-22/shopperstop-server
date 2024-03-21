@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult, check } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken"); 
+const jwt = require("jsonwebtoken");
 const fetchuser = require("../middleware/fetchuser");
 
 const JWT_SECRET = "unstoppable"; // jwt secret used to sign the data
@@ -14,12 +14,14 @@ router.post(
 
   [
     // using express validator
-    body("email").isEmail(),
-    body("name").isLength({ min: 3 }),
-    check("password", "The password must be 5+ chars long and contain a number")
+    body("email").isEmail().withMessage("Invalid email format."),
+    body("name")
+      .isLength({ min: 3 })
+      .withMessage("Please enter a name with at least 3 characters."),
+    check("password", "Password should be at least 5 characters long.")
       .not() // negates the result of next validator
       .isIn(["12345", "password", "god", "hacker", "abcde"])
-      .withMessage("Do not use a common word as the password")
+      .withMessage("Do not use a common password.")
       .isLength({ min: 5 }),
   ],
 
@@ -29,22 +31,20 @@ router.post(
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() }); // bad request: 400 (client side error)
+      return res.status(400).json({ success, errors: errors.array() }); // bad request: 400 (client side error)
     }
     try {
       // Check whether the user with this email exists already
       let user = await User.findOne({ email: req.body.email });
       if (user) {
         // if null then it doesn't exist
-        return res
-          .status(400)
-          .json({
-            success,
-            error: "Sorry, a user with this email already exists",
-          });
+        return res.status(400).json({
+          success,
+          errors: [{ msg: "Sorry, a user with this email already exists." }],
+        });
       }
 
-      const salt = await bcrypt.genSaltSync(10);
+      const salt = bcrypt.genSaltSync(10);
       const secPass = await bcrypt.hash(req.body.password, salt);
 
       // Create a new user
@@ -52,7 +52,7 @@ router.post(
         name: req.body.name,
         password: secPass,
         email: req.body.email,
-        phone: req.body.phone, 
+        phone: req.body.phone,
       });
 
       const data = {
@@ -61,7 +61,7 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
-      success=true;
+      success = true;
       res.json({ success, authToken });
     } catch (error) {
       console.error(error.message);
@@ -76,7 +76,7 @@ router.post(
 
   [
     body("email").isEmail(),
-    check("password", "Password cannot be blank").exists(),
+    check("password", "Password cannot be blank.").exists(),
   ],
 
   async (req, res) => {
@@ -91,14 +91,14 @@ router.post(
       if (!user) {
         res
           .status(400)
-          .json({ success, error: "Please login with correct credentials" });
+          .json({ success, error: "Please login with correct credentials." });
       }
 
       let passwordCompare = await bcrypt.compare(password, user.password); // returs a promise...syntax: compare(password, hash)
       if (!passwordCompare) {
         res
           .status(400)
-          .json({ success, error: "Please login with correct credentials" });
+          .json({ success, error: "Please login with correct credentials." });
       }
 
       const data = {
